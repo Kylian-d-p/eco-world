@@ -1,2 +1,2 @@
-# eco-world
-Projet Trophée NSI 2023
+# Projet Trophée NSI 2023
+### By "Les reconditionnés"
