@@ -1,1 +1,2 @@
-print("Coucou le monde")
+import pygame
+

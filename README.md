@@ -1,2 +1,3 @@
 # Projet Trophée NSI 2023
-### By "Les reconditionnés"
+### Par "Les reconditionnés"
+Il faut installer pygame
