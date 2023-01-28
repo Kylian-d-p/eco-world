@@ -1,3 +1,3 @@
 # Projet Trophée NSI 2023
 ### Par "Les reconditionnés"
-Il faut installer pygame
+Pour lancer le pogramme, exécuter la commande depuis le dossier courant : `python\python.exe -m main.py`
