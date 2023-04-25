@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
         "./python/Lib/site-packages"
-    ]
+    ],
+    "python.formatting.autoWrapLine": false
 }
