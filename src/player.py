@@ -8,10 +8,8 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, screen_height) -> None:
         super().__init__()
-        self.x: int = 0
         self.width: int = 120
         self.height: int = 180
-        self.y: int = screen_height - self.height
         self.images: list[pygame.Surface] = [  # Liste des images du joueur
             pygame.transform.smoothscale(pygame.image.load(
                 "assets/player/Olivier_walking_1.png").convert_alpha(), (self.width, self.height)),
@@ -38,25 +36,37 @@ class Player(pygame.sprite.Sprite):
             pygame.transform.smoothscale(pygame.image.load(
                 "assets/player/Olivier_walking_12.png").convert_alpha(), (self.width, self.height)),
         ]
+        # On vérifie que toutes les images ont la même taille
+        for image in self.images:
+            assert image.get_width() == self.width and image.get_height() == self.height
+        # Image active du joueur
+        self.image: pygame.Surface = self.images[0]
+        # Rectangle de l'image du joueur
+        self.rect: pygame.Rect = self.image.get_rect()
+        # Position de l'image du joueur
+        self.rect.x: int = 0
+        self.rect.y: int = screen_height - self.height
         # Index de l'image dans la liste self.images correspondant à l'image active
         self.current_image: int = 0
         # Attribut qui permet de ralentir la mise à jour de l'image du personnage en comptant le nombre de mise à jour
         # et en ne changeant l'image que lorsque ce compteur vaut 2 puis ensuite le réinitialiser à 0
         self.update_count: int = 0
-        # Entier qui défini la vitesse du joueur
-        self.speed: int = 15
         # Booléen qui indique si le joueur est en train de sauter
         self.jumping = False
-        # Entier qui défini la hauteur max du saut
-        self.jump_height = 200
-        # Entier qui défini la vitesse du saut
-        self.jump_speed = 15
-        # Entier qui défini la hauteur actuelle du saut
-        self.current_jump_height = 0
-        # Entier qui défini si le joueur est en train de monter ou de descendre pendant son saut
-        self.jump_direction = 0
+        # Vecteur qui défini la vélocité du joueur
+        self.velocity = pygame.math.Vector2()
+        # Entier qui défini la vélocité en y du joueur
+        self.velocity.y = 0
+        # Entier qui défini la vélocité en x du joueur
+        self.velocity.x = 0
+        # Entier qui défini la vélocité maximale en x du joueur
+        self.max_x_velocity = 50
+        # Entier qui défini la force du déplacement du joueur lorsqu'il appuie sur une touche
+        self.moving_speed_x = 5
+        # Entier qui défini la vitesse de décélération du joueur lorsqu'il ne bouge pas
+        self.stopping_speed_x = 2
 
-    def update(self, screen_width: int, direction: int = -1) -> None:
+    def update(self, screen_width: int, screen_height: int, direction: int = -1) -> None:
         """
             Mets à jour l'image du personnage
             direction : entier naturel (-1 : repos; 0: gauche, 1: droite)
@@ -68,41 +78,38 @@ class Player(pygame.sprite.Sprite):
                 self.current_image += 1
             else:
                 self.current_image = 0
-        self.move(direction, screen_width)
+
+        if -self.max_x_velocity + self.moving_speed_x < self.velocity.x < self.max_x_velocity - self.moving_speed_x:
+            if direction == 0:
+                self.velocity.x -= self.moving_speed_x
+            elif direction == 1:
+                self.velocity.x += self.moving_speed_x
+        
+        if self.velocity.x > 0 and self.rect.x + self.width + self.velocity.x < screen_width:
+            self.rect.x += self.velocity.x
+        elif self.velocity.x < 0 and self.rect.x > 0:
+            self.rect.x += self.velocity.x
+        else:
+            self.velocity.x = 0        
+
+        if self.velocity.x > 0:
+            self.velocity.x -= self.stopping_speed_x
+        elif self.velocity.x < 0:
+            self.velocity.x += self.stopping_speed_x
 
         if self.jumping:
-            self.jump_step()
+            self.rect.y -= self.velocity.y
+            self.velocity.y -= 2
+            if screen_height - self.height <= self.rect.y:
+                self.jumping = False
+                self.rect.y = screen_height - self.height
+                self.velocity.y = 0
+
 
     def jump(self):
         if not self.jumping:
             self.jumping = True
-
-    def jump_step(self):
-        if self.jumping:
-            if self.jump_direction == 0:
-                if self.current_jump_height < self.jump_height:
-                    self.y -= self.jump_speed
-                    self.current_jump_height += self.jump_speed
-                else:
-                    self.jump_direction = 1
-            elif self.jump_direction == 1:
-                if self.current_jump_height > 0:
-                    self.y += self.jump_speed
-                    self.current_jump_height -= self.jump_speed
-                else:
-                    self.jumping = False
-                    self.jump_direction = 0
-
-    def move(self, direction: int, screen_width: int) -> None:
-        """
-        Déplace le joueur dans une certaine direction (0: gauche, 1: droite)
-        """
-        if direction == 1:
-            if self.x + self.width + self.speed < screen_width:
-                self.x += self.speed
-        elif direction == 0:
-            if self.x > 0:
-                self.x -= self.speed
+            self.velocity.y = 40
 
     def draw(self, screen: pygame.Surface) -> None:
-        screen.blit(self.images[self.current_image], (self.x, self.y))
+        screen.blit(self.images[self.current_image], (self.rect.x, self.rect.y))

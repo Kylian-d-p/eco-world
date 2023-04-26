@@ -37,12 +37,15 @@ class WastesGenerator(pygame.sprite.Sprite):
         self.wastes_group: pygame.sprite.Group = pygame.sprite.Group()
         self.wastes_height: int = screen_height - 100
 
-    def generate_waste(self, screen: pygame.Surface, speed: int) -> None:
+    def generate_waste(self, screen: pygame.Surface, is_flying: bool=False, flying_speed: int=False) -> None:
         """
         Génère un déchet à une position aléatoire sur l'axe des x
         """
-        waste = Waste(self.wastes[random.randint(
-            0, len(self.wastes) - 1)], speed, screen.get_width(), self.wastes_height)
+        if is_flying:
+            height = random.randint(0, self.wastes_height - 100)
+        else:
+            height = self.wastes_height
+        waste = Waste(self.wastes[random.randint(0, len(self.wastes) - 1)], screen.get_width(), height, is_flying, flying_speed)
         self.wastes_group.add(waste)
 
     def update(self, screen: pygame.Surface, player_speed: int) -> None:
@@ -54,4 +57,13 @@ class WastesGenerator(pygame.sprite.Sprite):
         self.wastes_group.draw(screen)
 
         if random.randint(0, 40) == 0:
-            self.generate_waste(screen, random.randint(5, 15))
+            self.generate_waste(screen)
+        elif random.randint(0, 50) == 0:
+            self.generate_waste(screen, True, random.randint(5, 15))
+
+    def collided(self, sprite: pygame.sprite.Sprite) -> None:
+        """
+        Supprime tous les déchets sauf le sprite passé en paramètre
+        """
+        for waste in self.wastes_group:
+            waste.collided(sprite)

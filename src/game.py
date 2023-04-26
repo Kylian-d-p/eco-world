@@ -3,6 +3,7 @@ import player
 from background.background import Background
 import pygame
 import os
+import time
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 # Définition des constantes
@@ -43,8 +44,14 @@ game_running: bool = True
 # Entier indiquant la vitesse de déplacement du joueur
 player_speed: int = 10
 
+# Initialisation du générateur de déchets
 wastes_generator = WastesGenerator(SCREEN_HEIGHT)
 
+# Score du joueur
+score: float = 0
+
+# Liste des déchets qui sont déjà entrés en collision avec le joueur
+collided_wastes: list[pygame.sprite.Sprite] = []
 
 # Boucle du jeu
 while game_running:
@@ -57,17 +64,33 @@ while game_running:
     # Mettre à jour les déchets
     wastes_generator.update(screen, player_speed)
 
-    # Mettre à jour le joueur
-    if key_pressed.get(pygame.K_LEFT) == True:
-        game_player.update(SCREEN_WIDTH, 0)
-    elif key_pressed.get(pygame.K_RIGHT) == True:
-        game_player.update(SCREEN_WIDTH, 1)
-    else:
-        game_player.update(screen_width=SCREEN_WIDTH)
-
     # Si le joueur saute
     if key_pressed.get(pygame.K_SPACE) == True:
         game_player.jump()
+
+    # Mettre à jour le joueur
+    if key_pressed.get(pygame.K_LEFT) == True:
+        game_player.update(SCREEN_WIDTH, SCREEN_HEIGHT, 0)
+    elif key_pressed.get(pygame.K_RIGHT) == True:
+        game_player.update(SCREEN_WIDTH, SCREEN_HEIGHT, 1)
+    else:
+        game_player.update(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    
+    # Gestion des collisions entre le joueur et les déchets
+    collided_waste: list[pygame.sprite.Sprite] = pygame.sprite.spritecollide(game_player, wastes_generator.wastes_group, False, pygame.sprite.collide_mask)
+    if collided_waste != [] and collided_waste[0] not in collided_wastes:
+        wastes_generator.collided(collided_waste[0])
+        collided_wastes.append(collided_waste[0])
+        score /= 1.5
+
+    # On ajoute le score
+    score += 0.1
+
+    # Afficher le score
+    score_text = pygame.font.Font(None, 50).render(
+        f"Score : {int(score)}", True, (255, 255, 255))
+    screen.blit(score_text, (SCREEN_WIDTH - 200, 50))
 
     # Mettre à jour l'écran
     pygame.display.flip()
