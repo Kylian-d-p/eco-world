@@ -24,7 +24,7 @@ pygame.display.set_caption(GAME_NAME)  # Changement du titre de la fenêtre
 
 # Chargement de la taille de la fenêtre en plein écran
 screen: pygame.Surface = pygame.display.set_mode(
-    (WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
+    (WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
 
 # Dimensions de l'écran (peuvent être différents de WINDOW_WIDTH et WINDOW_HEIGHT)
 SCREEN_WIDTH: int = screen.get_width()
