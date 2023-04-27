@@ -3,7 +3,7 @@ from background.layer import BackgroundLayer
 from background.third_layer import ThirdLayer
 
 
-class Background(pygame.sprite.Sprite):
+class Background():
     """
     Classe Background permettant de gérer la parallaxe entre les différents layers du fond ainsi que l'animation des éloliennes
     """
@@ -12,7 +12,6 @@ class Background(pygame.sprite.Sprite):
         """
         Constructeur du background prenant en argument la surface screen
         """
-        super().__init__()
         self.third_layer: list[pygame.Surface] = [  # Liste des images du 3ème layer du background
             pygame.transform.smoothscale(pygame.image.load(
                 "assets/montagne/montagne_3_1.PNG").convert_alpha(), (screen_width, screen_height)).convert_alpha(),
@@ -73,9 +72,9 @@ class Background(pygame.sprite.Sprite):
                         self.layer_images[i], layer_speeds[i], j * screen_width)
                     self.layerGroup.add(layer)
 
-    def draw(self, screen: pygame.Surface, player_speed: int) -> None:
+    def update(self, screen: pygame.Surface, player_speed: int) -> None:
         """
         Afficher les layers sur screen
         """
-        self.layerGroup.update(player_speed)
-        self.layerGroup.draw(screen)
+        self.layerGroup.update(player_speed) # On met à jour les layers
+        self.layerGroup.draw(screen) # On les affiche
