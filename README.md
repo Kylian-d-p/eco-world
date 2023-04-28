@@ -34,7 +34,7 @@ Vous gagnez 7 points en ramassant un déchet et en perdez 5 en en laissant passe
 ![capture_2](screenshots/capture_2.png)
 ## Remarque
 
-Le fichier main.py ne sert qu'au lancement de game.py, se trouvant dans le dossier /src et qui contient le code du jeu.
+Le fichier main.py ne sert qu'au lancement de game.py, se trouvant dans le dossier /sources et qui contient le code du jeu.
 
 ## Crédits
 
