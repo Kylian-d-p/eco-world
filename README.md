@@ -21,12 +21,12 @@ Vous devrez installer la librairie pygame en utilisant la commande `pip install 
 
 ## Utilisation
 
-Le jeu est très simple à utiliser, vous arrivez sur un écran pour lancer le jeu.
-Utilisez ensuite les flèches directionnelles pour vous déplacer et la touche espace pour sauter.
-Vous pouvez faire un double saut en sautant pendant que vous êtes en l'air.
-Pour quitter le jeu, utilisez le bouton dédié en haut à gauche de l'écran.
-Vous pouvez perdre en touchant un obstacle ou en ayant un score inférieur à 50.
-Vous gagnez 7 points en ramassant un déchet et en perdez 5 en en laissant passer un.
+Le jeu est très simple à utiliser, vous arrivez sur un écran pour lancer le jeu.<br/>
+Utilisez ensuite les flèches directionnelles pour vous déplacer et la touche espace pour sauter.<br/>
+Vous pouvez faire un double saut en sautant pendant que vous êtes en l'air.<br/>
+Pour quitter le jeu, utilisez le bouton dédié en haut à gauche de l'écran.<br/>
+Vous pouvez perdre en touchant un obstacle ou en ayant un score inférieur à -50.<br/>
+Vous gagnez 7 points en ramassant un déchet et en perdez 5 en en laissant passer un.<br/>
 
 ## Captures d'écran
 
